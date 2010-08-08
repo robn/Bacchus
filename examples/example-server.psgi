@@ -30,7 +30,7 @@ my $app = sub {
 
     my $q = CGI::Simple->new($env->{QUERY_STRING});
 
-    my $ret = eval { $p->{class}->$method($env, query => { $q->Vars(',') }) };
+    my $ret = eval { $p->{class}->$method($env, args => { $q->Vars(',') }) };
     if ($@) {
         print STDERR $@;
         return [501, [], ['internal server error']];
