@@ -18,6 +18,12 @@ my $app = sub {
     if (my $p = $r->match($env)) {
         my $method = lc $env->{REQUEST_METHOD};
 
+        if ($method eq 'post' and exists $env->{HTTP_X_HTTP_METHOD_OVERRIDE}) {
+            $method = lc $env->{HTTP_X_HTTP_METHOD_OVERRIDE};
+            print STDERR ">>> $method <<<\n";
+            return [405, [], ['method not allowed']] if $method !~ m/^get|post|put|delete|head$/;
+        }
+
         if ($p->{class}->can($method)) {
             my $ret = eval { $p->{class}->$method($env) };
             if ($@) {
