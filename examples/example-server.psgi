@@ -16,14 +16,16 @@ my $app = sub {
     my ($env) = @_;
 
     if (my $p = $r->match($env)) {
-        eval "require $p->{class}";
-        if ($@) {
-            print STDERR $@;
-            return [500, [], ['internal server error']];
-        }
-
         my $method = lc $env->{REQUEST_METHOD};
-        return $p->{class}->$method($env) if $p->{class}->can($method);
+
+        if ($p->{class}->can($method)) {
+            my $ret = eval { $p->{class}->$method($env) };
+            if ($@) {
+                print STDERR $@;
+                return [501, [], ['internal server error']];
+            }
+            return $ret;
+        }
 
         return [405, [], ['method not allowed']];
     }
