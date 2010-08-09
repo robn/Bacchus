@@ -18,10 +18,8 @@ method get ( ClassName $class: HashRef $env, HashRef[Str] :$args? = {} ) {
     my $res = $ua->get($args->{url});
     confess "gadget fetch failed: ".$res->status_line if !$res->is_success;
 
-    return [200, [], [$res->content]];
-
-    #my $g = Bacchus::Gadget->new_from_xml($res->content);
-    #return [200, [], [$g->render]];
+    my $g = Bacchus::Gadget->new_from_xml($res->content);
+    return [200, [], [$g->render]];
 }
 
 __PACKAGE__->meta->make_immutable;
