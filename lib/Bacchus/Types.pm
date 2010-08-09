@@ -10,8 +10,9 @@ use MooseX::Types -declare => [qw(
 
 use MooseX::Types::Moose qw(Str);
 
-class_type Gadget,        { class => 'Bacchus::Gadget' };
-class_type GadgetFeature, { class => 'Bacchus::GadgetFeature' };
+class_type Gadget,             { class => 'Bacchus::Gadget' };
+class_type GadgetFeature,      { class => 'Bacchus::Gadget::Feature' };
+class_type GadgetOAuthService, { class => 'Bacchus::Gadget::OAuthService' };
 
 __PACKAGE__->meta->make_immutable;
 
