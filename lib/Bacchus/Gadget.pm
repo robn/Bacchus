@@ -43,7 +43,7 @@ has icon               => ( is => "ro", isa => Str, default => '' );
 has _required_features => (
     traits   => ["Hash"],
     is       => "ro",
-    isa      => HashRef[GadgetFeature]
+    isa      => HashRef[GadgetFeature],
     init_arg => "required_features",
     default  => sub { {} },
     handles  => {
@@ -55,12 +55,24 @@ has _required_features => (
 has _optional_features => (
     traits   => ["Hash"],
     is       => "ro",
-    isa      => HashRef[GadgetFeature]
+    isa      => HashRef[GadgetFeature],
     init_arg => "optional_features",
     default  => sub { {} },
     handles  => {
         optional_features => 'keys',
         optional_feature  => 'get',
+    },
+);
+
+has _oauth_services => (
+    traits   => ["Hash"],
+    is       => "ro",
+    isa      => HashRef[GadgetOAuthService],
+    init_arg => "oauth_services",
+    default  => sub { {} },
+    handles  => {
+        oauth_services => 'keys',
+        oauth_service  => 'get',
     },
 );
 
