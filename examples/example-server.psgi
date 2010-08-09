@@ -8,6 +8,7 @@ use strict;
 use Bacchus;
 use CGI::Simple;
 use Router::Simple::Declare;
+use Try::Tiny;
 
 my $r = router {
     connect '/gadgets/ifr', { class => 'Bacchus::Handler::Gadget::GadgetRenderer' };
@@ -30,11 +31,13 @@ my $app = sub {
 
     my $q = CGI::Simple->new($env->{QUERY_STRING});
 
-    my $ret = eval { $p->{class}->$method($env, args => { $q->Vars(',') }) };
-    if ($@) {
-        print STDERR $@;
-        return [501, [], ['internal server error']];
+    my $ret = try {
+        $p->{class}->$method($env, args => { $q->Vars(',') });
     }
+    catch {
+        print STDERR $_;
+        return [501, [], ['internal server error']];
+    };
 
     return $ret;
 }
